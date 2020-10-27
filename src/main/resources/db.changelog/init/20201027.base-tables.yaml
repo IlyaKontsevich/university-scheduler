@@ -1,53 +1,112 @@
 databaseChangeLog:
   - logicalFilePath: no-path
   - changeSet:
-      id: base-1
+      id: base init 1
       author: ikantsevich
       changes:
-        - createTable:
-            columns:
-              - column:
-                  constraints:
-                    primaryKey: true
-                  name: cd_id
-                  type: BINARY(16)
-              - column:
-                  constraints:
-                    nullable: false
-                  name: ag_id
-                  type: BINARY(16)
-              - column:
-                  name: cd_created
-                  type: datetime
-                  defaultValueComputed: CURRENT_TIMESTAMP
-              - column:
-                  constraints:
-                    nullable: false
-                  name: cd_is_delete_after
-                  type: BIT(1)
-              - column:
-                  name: cd_details_direction_type
-                  type: VARCHAR(255)
-              - column:
-                  name: cd_folder_path
-                  type: VARCHAR(256)
-              - column:
-                  name: cd_modified
-                  type: datetime
-                  defaultValueComputed: CURRENT_TIMESTAMP
-              - column:
-                  name: cd_password
-                  type: VARCHAR(1024)
-              - column:
-                  name: cd_protocol_type
-                  type: VARCHAR(255)
-              - column:
-                  name: cd_ssh_key
-                  type: VARCHAR(8192)
-              - column:
-                  name: cd_url
-                  type: VARCHAR(256)
-              - column:
-                  name: cd_username
-                  type: VARCHAR(1024)
-            tableName: communication_details
+        - sql:
+            comment: init baic tables
+            dbms: mysql
+            sql:
+              CREATE TABLE IF NOT EXISTS university
+              (
+              un_id      INT AUTO_INCREMENT NOT NULL,
+              un_name    VARCHAR(255)       NOT NULL,
+              un_address VARCHAR(255)       NOT NULL,
+              created    datetime DEFAULT CURRENT_TIMESTAMP,
+              modified   datetime DEFAULT CURRENT_TIMESTAMP,
+              PRIMARY KEY (un_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS role
+              (
+              rol_id   INT AUTO_INCREMENT NOT NULL,
+              name     VARCHAR(255)       NOT NULL,
+              created  datetime DEFAULT CURRENT_TIMESTAMP,
+              modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id    INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              PRIMARY KEY (rol_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS credential
+              (
+              cr_id    INT AUTO_INCREMENT NOT NULL,
+              login    VARCHAR(255)       NOT NULL,
+              password VARCHAR(255)       NOT NULL,
+              created  datetime DEFAULT CURRENT_TIMESTAMP,
+              modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id    INT                NOT NULL,
+              rol_id   INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              FOREIGN KEY (rol_id) REFERENCES role (rol_id),
+              PRIMARY KEY (cr_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS faculty
+              (
+              fa_id    INT AUTO_INCREMENT NOT NULL,
+              fa_name  VARCHAR(255)       NOT NULL,
+              created  datetime DEFAULT CURRENT_TIMESTAMP,
+              modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id    INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              PRIMARY KEY (fa_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS cathedra
+              (
+              ca_id    INT AUTO_INCREMENT NOT NULL,
+              ca_name  VARCHAR(255)       NOT NULL,
+              created  datetime DEFAULT CURRENT_TIMESTAMP,
+              modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id    INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              PRIMARY KEY (ca_id),
+              fac_id   INT                NOT NULL,
+              FOREIGN KEY (fac_id) REFERENCES faculty (fa_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS groupp
+              (
+              gr_id    INT AUTO_INCREMENT NOT NULL,
+              gr_name  VARCHAR(255)       NOT NULL,
+              created  datetime DEFAULT CURRENT_TIMESTAMP,
+              modified datetime DEFAULT CURRENT_TIMESTAMP,
+              dep_id   INT                NOT NULL,
+              un_id    INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              PRIMARY KEY (gr_id),
+              FOREIGN KEY (dep_id) REFERENCES cathedra (ca_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS subgroup
+              (
+              sgr_id     INT AUTO_INCREMENT NOT NULL,
+              sgr_number INT                NOT NULL,
+              created    datetime DEFAULT CURRENT_TIMESTAMP,
+              modified   datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id      INT                NOT NULL,
+              gr_id      INT                NOT NULL,
+              FOREIGN KEY (gr_id) REFERENCES groupp (gr_id),
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              PRIMARY KEY (sgr_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS student
+              (
+              st_id         INT AUTO_INCREMENT NOT NULL,
+              st_name       VARCHAR(255)       NOT NULL,
+              st_created    datetime DEFAULT CURRENT_TIMESTAMP,
+              st_modified   datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id         INT                NOT NULL,
+              sgr_id        INT                NOT NULL,
+              cr_id         INT                NOT NULL,
+              st_age        INT unsigned       NOT NULL,
+              st_sex        VARCHAR(1)         NOT NULL,
+              st_is_capitan TINYINT            NOT NULL,
+              FOREIGN KEY (sgr_id) REFERENCES subgroup (sgr_id),
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              FOREIGN KEY (cr_id) REFERENCES credential (cr_id),
+              PRIMARY KEY (st_id)
+              );
