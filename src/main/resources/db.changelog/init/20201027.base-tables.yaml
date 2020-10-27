@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - logicalFilePath: no-path
+  - changeSet:
+      id: base-1
+      author: ikantsevich
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                  name: cd_id
+                  type: BINARY(16)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: ag_id
+                  type: BINARY(16)
+              - column:
+                  name: cd_created
+                  type: datetime
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  constraints:
+                    nullable: false
+                  name: cd_is_delete_after
+                  type: BIT(1)
+              - column:
+                  name: cd_details_direction_type
+                  type: VARCHAR(255)
+              - column:
+                  name: cd_folder_path
+                  type: VARCHAR(256)
+              - column:
+                  name: cd_modified
+                  type: datetime
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: cd_password
+                  type: VARCHAR(1024)
+              - column:
+                  name: cd_protocol_type
+                  type: VARCHAR(255)
+              - column:
+                  name: cd_ssh_key
+                  type: VARCHAR(8192)
+              - column:
+                  name: cd_url
+                  type: VARCHAR(256)
+              - column:
+                  name: cd_username
+                  type: VARCHAR(1024)
+            tableName: communication_details

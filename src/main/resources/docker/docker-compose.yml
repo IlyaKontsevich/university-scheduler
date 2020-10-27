@@ -1,0 +1,18 @@
+version: '3.6'
+volumes:
+  mysql-db:
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'scheduler'
+      MYSQL_USER: 'root'
+      MYSQL_ROOT_PASSWORD: 'mYsQl'
+      MYSQL_TCP_PORT: 3307
+    ports:
+      - 3307:3307
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--sql-mode=ALLOW_INVALID_DATES','--default_time_zone=+00:00','--max_connections=1000' ]
+

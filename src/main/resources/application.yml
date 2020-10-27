@@ -1,0 +1,27 @@
+server.port: 8770
+datasource:
+  host: '${dockerdbhost:localhost}:3307'
+  schema: 'scheduler'
+  url: 'jdbc:mariadb://${datasource.host}/${datasource.schema}'
+  username: 'root'
+  password: 'mYsQl'
+
+spring:
+  jpa:
+    properties:
+      hibernate.jdbc.time_zone: UTC
+      hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
+      hibernate.show_sql: true
+      hibernate.format_sql: true
+      hibernate.type: trace
+  datasource:
+    name: 'SchedulerMySQL'
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: '${datasource.url}'
+    username: '${datasource.username}'
+    password: '${datasource.password}'
+  liquibase:
+    user: '${datasource.username}'
+    parameters.env: '${spring.profiles.active}'
+    enabled: true
+    change-log: '/db.changelog/db.changelog-master.yaml'

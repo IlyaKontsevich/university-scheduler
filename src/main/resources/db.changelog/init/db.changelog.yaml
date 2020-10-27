@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - logicalFilePath: no-path
+  - include:
+      file: 20201027.base-tables.yaml
+      relativeToChangelogFile: true
