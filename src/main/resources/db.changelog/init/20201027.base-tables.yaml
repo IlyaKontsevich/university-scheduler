@@ -163,7 +163,11 @@ databaseChangeLog:
               un_id            INT                NOT NULL,
               em_sex           VARCHAR(1)         NOT NULL,
               em_position      INT unsigned       NOT NULL,
+              ca_id            INT,
+              fa_id            INT                NOT NULL,
               FOREIGN KEY (un_id) REFERENCES university (un_id),
+              FOREIGN KEY (ca_id) REFERENCES cathedra (ca_id),
+              FOREIGN KEY (fa_id) REFERENCES faculty (fa_id),
               PRIMARY KEY (em_id)
               );
 
