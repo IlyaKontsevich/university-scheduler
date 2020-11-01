@@ -10,32 +10,57 @@ databaseChangeLog:
             sql:
               CREATE TABLE IF NOT EXISTS university
               (
-              un_id      INT AUTO_INCREMENT NOT NULL,
-              un_name    VARCHAR(255)       NOT NULL,
-              un_address VARCHAR(255)       NOT NULL,
-              created    datetime DEFAULT CURRENT_TIMESTAMP,
-              modified   datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id       INT AUTO_INCREMENT NOT NULL,
+              un_name     VARCHAR(255)       NOT NULL,
+              un_address  VARCHAR(255)       NOT NULL,
+              un_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              un_modified datetime DEFAULT CURRENT_TIMESTAMP,
               PRIMARY KEY (un_id)
               );
 
               CREATE TABLE IF NOT EXISTS role
               (
-              rol_id   INT AUTO_INCREMENT NOT NULL,
-              name     VARCHAR(255)       NOT NULL,
-              created  datetime DEFAULT CURRENT_TIMESTAMP,
-              modified datetime DEFAULT CURRENT_TIMESTAMP,
-              un_id    INT                NOT NULL,
+              rol_id       INT AUTO_INCREMENT NOT NULL,
+              rol_name     VARCHAR(255)       NOT NULL,
+              rol_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              rol_modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id        INT                NOT NULL,
               FOREIGN KEY (un_id) REFERENCES university (un_id),
               PRIMARY KEY (rol_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS permissions
+              (
+              per_id       INT AUTO_INCREMENT NOT NULL,
+              per_name     VARCHAR(255)       NOT NULL,
+              per_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              per_modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id        INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              PRIMARY KEY (per_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS role_permissions
+              (
+              rp_id       INT AUTO_INCREMENT NOT NULL,
+              rp_name     VARCHAR(255)       NOT NULL,
+              rp_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              rp_modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id       INT                NOT NULL,
+              per_id      INT                NOT NULL,
+              rol_id      INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              CONSTRAINT rp_uniq_constraint UNIQUE (per_id, rol_id),
+              PRIMARY KEY (rp_id)
               );
 
               CREATE TABLE IF NOT EXISTS credential
               (
               cr_id    INT AUTO_INCREMENT NOT NULL,
-              login    VARCHAR(255)       NOT NULL,
-              password VARCHAR(255)       NOT NULL,
-              created  datetime DEFAULT CURRENT_TIMESTAMP,
-              modified datetime DEFAULT CURRENT_TIMESTAMP,
+              cr_login    VARCHAR(255)       NOT NULL,
+              cr_password VARCHAR(255)       NOT NULL,
+              cr_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              cr_modified datetime DEFAULT CURRENT_TIMESTAMP,
               un_id    INT                NOT NULL,
               rol_id   INT                NOT NULL,
               FOREIGN KEY (un_id) REFERENCES university (un_id),
@@ -47,66 +72,190 @@ databaseChangeLog:
               (
               fa_id    INT AUTO_INCREMENT NOT NULL,
               fa_name  VARCHAR(255)       NOT NULL,
-              created  datetime DEFAULT CURRENT_TIMESTAMP,
-              modified datetime DEFAULT CURRENT_TIMESTAMP,
+              fa_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              fa_modified datetime DEFAULT CURRENT_TIMESTAMP,
               un_id    INT                NOT NULL,
               FOREIGN KEY (un_id) REFERENCES university (un_id),
-              PRIMARY KEY (fa_id)
+              PRIMARY KEY (fa_id),
+              CONSTRAINT fa_uniq_constraint UNIQUE (fa_name, un_id)
               );
 
               CREATE TABLE IF NOT EXISTS cathedra
               (
               ca_id    INT AUTO_INCREMENT NOT NULL,
               ca_name  VARCHAR(255)       NOT NULL,
-              created  datetime DEFAULT CURRENT_TIMESTAMP,
-              modified datetime DEFAULT CURRENT_TIMESTAMP,
+              ca_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              ca_modified datetime DEFAULT CURRENT_TIMESTAMP,
               un_id    INT                NOT NULL,
               FOREIGN KEY (un_id) REFERENCES university (un_id),
               PRIMARY KEY (ca_id),
               fac_id   INT                NOT NULL,
-              FOREIGN KEY (fac_id) REFERENCES faculty (fa_id)
+              FOREIGN KEY (fac_id) REFERENCES faculty (fa_id),
+              CONSTRAINT ca_uniq_constraint UNIQUE (ca_name, fac_id)
               );
 
               CREATE TABLE IF NOT EXISTS groupp
               (
               gr_id    INT AUTO_INCREMENT NOT NULL,
               gr_name  VARCHAR(255)       NOT NULL,
-              created  datetime DEFAULT CURRENT_TIMESTAMP,
-              modified datetime DEFAULT CURRENT_TIMESTAMP,
+              gr_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              gr_modified datetime DEFAULT CURRENT_TIMESTAMP,
               dep_id   INT                NOT NULL,
               un_id    INT                NOT NULL,
               FOREIGN KEY (un_id) REFERENCES university (un_id),
               PRIMARY KEY (gr_id),
-              FOREIGN KEY (dep_id) REFERENCES cathedra (ca_id)
+              FOREIGN KEY (dep_id) REFERENCES cathedra (ca_id),
+              CONSTRAINT gr_uniq_constraint UNIQUE (gr_name, un_id)
               );
 
               CREATE TABLE IF NOT EXISTS subgroup
               (
               sgr_id     INT AUTO_INCREMENT NOT NULL,
               sgr_number INT                NOT NULL,
-              created    datetime DEFAULT CURRENT_TIMESTAMP,
-              modified   datetime DEFAULT CURRENT_TIMESTAMP,
+              sgr_created    datetime DEFAULT CURRENT_TIMESTAMP,
+              sgr_modified   datetime DEFAULT CURRENT_TIMESTAMP,
               un_id      INT                NOT NULL,
               gr_id      INT                NOT NULL,
               FOREIGN KEY (gr_id) REFERENCES groupp (gr_id),
               FOREIGN KEY (un_id) REFERENCES university (un_id),
+              CONSTRAINT sgr_uniq_constraint UNIQUE (sgr_number, gr_id),
               PRIMARY KEY (sgr_id)
               );
 
               CREATE TABLE IF NOT EXISTS student
               (
-              st_id         INT AUTO_INCREMENT NOT NULL,
-              st_name       VARCHAR(255)       NOT NULL,
-              st_created    datetime DEFAULT CURRENT_TIMESTAMP,
-              st_modified   datetime DEFAULT CURRENT_TIMESTAMP,
-              un_id         INT                NOT NULL,
-              sgr_id        INT                NOT NULL,
-              cr_id         INT                NOT NULL,
-              st_age        INT unsigned       NOT NULL,
-              st_sex        VARCHAR(1)         NOT NULL,
-              st_is_capitan TINYINT            NOT NULL,
+              st_id            INT AUTO_INCREMENT NOT NULL,
+              st_name          VARCHAR(255)       NOT NULL,
+              st_created       datetime DEFAULT CURRENT_TIMESTAMP,
+              st_modified      datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id            INT                NOT NULL,
+              sgr_id           INT                NOT NULL,
+              cr_id            INT                NOT NULL,
+              st_date_of_birth datetime,
+              st_sex           VARCHAR(1)         NOT NULL,
+              st_is_capitan    TINYINT            NOT NULL,
               FOREIGN KEY (sgr_id) REFERENCES subgroup (sgr_id),
               FOREIGN KEY (un_id) REFERENCES university (un_id),
               FOREIGN KEY (cr_id) REFERENCES credential (cr_id),
               PRIMARY KEY (st_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS hull
+              (
+              hu_id       INT AUTO_INCREMENT NOT NULL,
+              hu_number   INT                NOT NULL,
+              hu_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              hu_modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id       INT                NOT NULL,
+              hu_address  VARCHAR(255)       NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              CONSTRAINT hu_uniq_constraint UNIQUE (hu_number, un_id),
+              PRIMARY KEY (hu_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS employee
+              (
+              em_id            INT AUTO_INCREMENT NOT NULL,
+              em_name          VARCHAR(255)       NOT NULL,
+              em_created       datetime DEFAULT CURRENT_TIMESTAMP,
+              em_modified      datetime DEFAULT CURRENT_TIMESTAMP,
+              em_date_of_birth datetime,
+              un_id            INT                NOT NULL,
+              em_sex           VARCHAR(1)         NOT NULL,
+              em_position      INT unsigned       NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              PRIMARY KEY (em_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS teacher
+              (
+              teach_id       INT AUTO_INCREMENT NOT NULL,
+              teach_name     VARCHAR(255)       NOT NULL,
+              teach_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              teach_modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id          INT                NOT NULL,
+              em_id          INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              FOREIGN KEY (em_id) REFERENCES employee (em_id),
+              PRIMARY KEY (teach_id)
+              );
+
+
+              CREATE TABLE IF NOT EXISTS classroom
+              (
+              class_id       INT AUTO_INCREMENT NOT NULL,
+              class_name     VARCHAR(255)       NOT NULL,
+              class_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              class_modified datetime DEFAULT CURRENT_TIMESTAMP,
+              class_capacity INT unsigned,
+              un_id          INT                NOT NULL,
+              hu_id          INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              FOREIGN KEY (hu_id) REFERENCES hull (hu_id),
+              PRIMARY KEY (class_id),
+              CONSTRAINT class_uniq_constraint UNIQUE (class_name, hu_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS time_table
+              (
+              tt_id       INT AUTO_INCREMENT NOT NULL,
+              tt_name     VARCHAR(255)       NOT NULL,
+              tt_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              tt_modified datetime DEFAULT CURRENT_TIMESTAMP,
+              tt_time     INT                NOT NULL COMMENT 'ENUM(8.40 (1), 11.00(2)..)',
+              tt_date     date               NOT NULL,
+              tt_week     INT                NOT NULL COMMENT 'ENUM(UPPER, LOWER, ALL, NONE)',
+              tt_dates    VARCHAR(255) COMMENT 'FOR tt_weer == NONE ex:(10.02, 12.04)',
+              un_id       INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              PRIMARY KEY (tt_id),
+              CONSTRAINT tt_uniq_constraint UNIQUE (tt_name, tt_date, tt_time)
+              );
+
+              CREATE TABLE IF NOT EXISTS lesson
+              (
+              les_id       INT AUTO_INCREMENT NOT NULL,
+              les_name     VARCHAR(255)       NOT NULL,
+              les_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              les_modified datetime DEFAULT CURRENT_TIMESTAMP,
+              tt_id        INT                NOT NULL,
+              un_id        INT                NOT NULL,
+              class_id     INT                NOT NULL,
+              FOREIGN KEY (class_id) REFERENCES classroom (class_id),
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              FOREIGN KEY (tt_id) REFERENCES time_table (tt_id),
+              PRIMARY KEY (les_id),
+              CONSTRAINT lesson_uniq_constraint UNIQUE (tt_id, class_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS sub_group_lesson
+              (
+              sgl_id       INT AUTO_INCREMENT NOT NULL,
+              sgl_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              sgl_modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id        INT                NOT NULL,
+              teach_id     INT                NOT NULL,
+              les_id       INT                NOT NULL,
+              sgr_id       INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              FOREIGN KEY (teach_id) REFERENCES teacher (teach_id),
+              FOREIGN KEY (les_id) REFERENCES lesson (les_id),
+              FOREIGN KEY (sgr_id) REFERENCES subgroup (sgr_id),
+              PRIMARY KEY (sgl_id),
+              CONSTRAINT sgl_uniq_constraint UNIQUE (sgr_id, les_id)
+              );
+
+              CREATE TABLE IF NOT EXISTS teacher_lesson
+              (
+              tl_id       INT AUTO_INCREMENT NOT NULL,
+              tl_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              tl_modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id       INT                NOT NULL,
+              teach_id    INT                NOT NULL,
+              les_id      INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              FOREIGN KEY (teach_id) REFERENCES teacher (teach_id),
+              FOREIGN KEY (les_id) REFERENCES lesson (les_id),
+              PRIMARY KEY (tl_id),
+              CONSTRAINT tl_uniq_constraint UNIQUE (teach_id, les_id)
               );
