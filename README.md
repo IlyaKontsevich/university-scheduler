@@ -2,7 +2,7 @@
 
 ## Local setup
 Run file src/main/resources/docker/run-local.sh 
-after create scheduler schema
+after that create scheduler schema
 
 ```
 create schema scheduler;
