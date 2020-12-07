@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - logicalFilePath: no-path
+  - changeSet:
+      id: 20201205.add-time-table-lesson
+      author: ikantsevich
+      changes:
+        - sql:
+            comment: Add time_table_lesson table
+            dbms: mysql
+            sql:
+              CREATE TABLE IF NOT EXISTS time_table_lesson
+              (
+              ttl_id       INT AUTO_INCREMENT NOT NULL,
+              ttl_number   INT UNSIGNED       NOT NULL,
+              ttl_start    TIME UNIQUE        NOT NULL,
+              ttl_end      TIME UNIQUE        NOT NULL,
+              ttl_created  datetime DEFAULT CURRENT_TIMESTAMP,
+              ttl_modified datetime DEFAULT CURRENT_TIMESTAMP,
+              un_id       INT                NOT NULL,
+              FOREIGN KEY (un_id) REFERENCES university (un_id),
+              PRIMARY KEY (ttl_id)
+              );
+
+  - changeSet:
+      id: 20201205.add-time-table-lesson-foreign-key
+      author: ikantsevich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: ttl_id
+            baseTableName: time_table
+            constraintName: fk_time_table-time_table_lesson
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: ttl_id
+            referencedTableName: time_table_lesson

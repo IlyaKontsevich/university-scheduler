@@ -3,3 +3,6 @@ databaseChangeLog:
   - include:
       file: 20201027.base-tables.yaml
       relativeToChangelogFile: true
+  - include:
+      file: 20201205.add-time_table_lesson-table.yaml
+      relativeToChangelogFile: true

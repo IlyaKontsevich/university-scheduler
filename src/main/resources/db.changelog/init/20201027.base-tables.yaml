@@ -210,14 +210,15 @@ databaseChangeLog:
               tt_name     VARCHAR(255)       NOT NULL,
               tt_created  datetime DEFAULT CURRENT_TIMESTAMP,
               tt_modified datetime DEFAULT CURRENT_TIMESTAMP,
-              tt_time     VARCHAR(50)                NOT NULL COMMENT 'ENUM(8.40 (1), 11.00(2)..)',
+              ttl_id     INT                NOT NULL,
               tt_date     date               NOT NULL,
-              tt_week     VARCHAR(50)                NOT NULL COMMENT 'ENUM(UPPER, LOWER, ALL, NONE)',
+              tt_week_type     VARCHAR(50)                NOT NULL COMMENT 'ENUM(UPPER, LOWER, ALL, NONE)',
+              tt_week_day     VARCHAR(50)                NOT NULL COMMENT 'ENUM(MONDAY, TUSDAY...)',
               tt_dates    VARCHAR(255) COMMENT 'FOR tt_week == NONE ex:(10.02, 12.04)',
               un_id       INT                NOT NULL,
               FOREIGN KEY (un_id) REFERENCES university (un_id),
               PRIMARY KEY (tt_id),
-              CONSTRAINT tt_uniq_constraint UNIQUE (tt_name, tt_date, tt_time)
+              CONSTRAINT tt_uniq_constraint UNIQUE (tt_name, tt_date, ttl_id)
               );
 
               CREATE TABLE IF NOT EXISTS lesson

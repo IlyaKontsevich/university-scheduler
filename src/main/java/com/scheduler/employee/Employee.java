@@ -30,7 +30,7 @@ public class Employee extends BaseEntity
     private String sex;
 
     @Column( name = "em_position" )
-    private Long position;
+    private Position position;
 
     @NotNull
     @Column( name = "un_id" )

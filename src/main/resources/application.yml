@@ -1,4 +1,6 @@
-server.port: 8770
+server:
+  port: 8770
+  servlet.context-path: /scheduler
 datasource:
   host: '${dockerdbhost:localhost}:3307'
   schema: 'scheduler'
