@@ -13,14 +13,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static com.beust.jcommander.internal.Lists.newArrayList;
 import static com.scheduler.parser.ParserPredicates.*;
-import static com.scheduler.parser.ParserStringUtils.REGEX_FOR_BLANK_ROW;
+import static com.scheduler.parser.ParserStringUtils.BLANK_ROW_REGEX;
 import static com.scheduler.parser.ParserStringUtils.splitNotEmpty;
 
 @Service
 public class ParserService
 {
-    public void parse() throws IOException, InvalidFormatException
+    public String parse() throws IOException, InvalidFormatException
     {
         List<String> allRows = readNotEmptyLinesFromFile( "src/main/resources/Raspisanie_Feis_3_4_Kurs2.xls" );
         List<String> groupNames = getGroupNames( allRows );
@@ -30,7 +31,12 @@ public class ParserService
         weekDayListMap.forEach( ( weekDay, value ) -> dataPerWeekDays.add( new RowsPerWeekDay( weekDay, getDataPerLesson( value ) ) ) );
         Collection<DataPerGroup> dataPerGroup = getGroupScheduler( groupNames, dataPerWeekDays );
 
-        System.out.println( dataPerGroup );
+        StringBuilder stringBuilder = new StringBuilder();
+        dataPerGroup.forEach( dataPerGroup1 -> {
+            stringBuilder.append( "\n" );
+            stringBuilder.append( dataPerGroup1 );
+        } );
+        return stringBuilder.toString();
     }
 
     private Collection<DataPerGroup> getGroupScheduler( List<String> groupNames, List<RowsPerWeekDay> rowsPerWeekDays )
@@ -42,9 +48,9 @@ public class ParserService
         return dataPerGroups.values();
     }
 
-    private Map<Integer, List<DataPerLesson>> getLessonDataPerGroupNumber( List<RowsPerLesson> rowsPerLessons )
+    private Map<Integer, List<DataPerLessonTime>> getLessonDataPerGroupNumber( List<RowsPerLesson> rowsPerLessons )
     {
-        Map<Integer, List<DataPerLesson>> lessonDataPerGroup = new HashMap<>();
+        Map<Integer, List<DataPerLessonTime>> lessonDataPerGroup = new HashMap<>();
         rowsPerLessons.forEach( rowsPerLesson -> {
             for( int rowCounter = 0; rowCounter < rowsPerLesson.getRows().size(); rowCounter++ )
             {
@@ -61,7 +67,7 @@ public class ParserService
         return lessonDataPerGroup;
     }
 
-    private void updateOrCreate( Map<Integer, DataPerGroup> dataPerGroups, List<String> groupNames, WeekDay weekDay, Map<Integer, List<DataPerLesson>> groupNumberWithCellData )
+    private void updateOrCreate( Map<Integer, DataPerGroup> dataPerGroups, List<String> groupNames, WeekDay weekDay, Map<Integer, List<DataPerLessonTime>> groupNumberWithCellData )
     {
         groupNumberWithCellData.forEach( ( groupNumber, dataPerLesson ) -> {
             DataPerWeekDay dataPerWeekDay = new DataPerWeekDay();
@@ -73,7 +79,7 @@ public class ParserService
 
                 DataPerGroup dataPerGroup = new DataPerGroup();
                 dataPerGroup.setGroupName( groupNames.get( groupNumber ) );
-                dataPerGroup.setDataPerWeekDays( Lists.newArrayList( dataPerWeekDay ) );
+                dataPerGroup.setDataPerWeekDays( newArrayList( dataPerWeekDay ) );
                 dataPerGroups.put( groupNumber, dataPerGroup );
             }
             else
@@ -83,18 +89,18 @@ public class ParserService
         } );
     }
 
-    private void putOrUpdate( Map<Integer, List<DataPerLesson>> lessonDataPerGroup, Integer key, String lessonTime, List<String> columnData, int rowNumber )
+    private void putOrUpdate( Map<Integer, List<DataPerLessonTime>> lessonDataPerGroup, Integer key, String lessonTime, List<String> columnData, int rowNumber )
     {
         if( columnData.isEmpty() || columnData.stream().allMatch( String::isEmpty ) )
         {
             return;
         }
-        DataPerLesson data = new DataPerLesson();
+        DataPerLessonTime data = new DataPerLessonTime();
         data.setLessonTime( lessonTime );
         data.setRow( rowNumber, columnData );
         if( lessonDataPerGroup.get( key ) == null )
         {
-            lessonDataPerGroup.put( key, Lists.newArrayList( data ) );
+            lessonDataPerGroup.put( key, newArrayList( data ) );
         }
         else
         {
@@ -142,7 +148,7 @@ public class ParserService
                     rowString.append( "|" );
                 }
             } );
-            if( !rowString.toString().isEmpty() && !rowString.toString().matches( REGEX_FOR_BLANK_ROW ) )
+            if( !rowString.toString().isEmpty() && !rowString.toString().matches( BLANK_ROW_REGEX ) )
             {
                 rowString.deleteCharAt( rowString.length() - 1 ); //remove last |
                 allRows.add( rowString.toString() );

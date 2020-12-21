@@ -15,4 +15,10 @@ public class DataPerGroup
     private String groupName;
     @NonNull
     private List<DataPerWeekDay> dataPerWeekDays;
+
+    @Override
+    public String toString()
+    {
+        return "Group name=" + groupName + "\n" + "Scheduler: " + dataPerWeekDays;
+    }
 }

@@ -14,5 +14,11 @@ public class DataPerWeekDay
     @NonNull
     private WeekDay weekDay;
     @NonNull
-    private List<DataPerLesson> dataPerLessonList;
+    private List<DataPerLessonTime> dataPerLessonList;
+
+    @Override
+    public String toString()
+    {
+        return "\nWeek Day = " + weekDay + "\n" + dataPerLessonList;
+    }
 }

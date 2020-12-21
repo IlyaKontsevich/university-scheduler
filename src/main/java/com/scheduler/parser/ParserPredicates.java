@@ -8,18 +8,22 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static com.scheduler.parser.ParserStringUtils.*;
+import static com.scheduler.parser.ParserStringUtils.isMatchesValidRegex;
 
 public enum ParserPredicates
 {
     IS_GROUP_NAME_ROW( row -> {
         List<String> groupNames = splitNotEmpty( row, "\\|" );
         String groupName = groupNames.get( 0 );
-        return groupNames.size() > 1 && groupName.length() < 10 && isMatchesValidRegex( groupName, ParserStringUtils.REGEX_FOR_GROUP_NAMES );
+        return groupNames.size() > 1 && groupName.length() < 10 && isMatchesValidRegex( groupName, GROUP_NAME_REGEXES );
     } ),
     IS_ROW_START_WITH_WEEK_DAY( row -> StringUtils.startsWithAny( row,
         Arrays.stream( WeekDay.values() ).map( WeekDay::getRussianName ).toArray( String[]::new ) ) ),
 
-    IS_ROW_START_WITH_LESSON_TIME( row -> row.matches( REGEX_FOR_LESSON_TIME ) );
+    IS_ROW_START_WITH_LESSON_TIME( row -> row.matches( LESSON_TIME_REGEX ) ),
+
+    IS_CELL_START_WITH_ADDITIONAL_TIME( cell -> cell.matches( ADDITIONAl_LESSON_TIME_REGEX ) ),
+    IS_CELL_START_WITH_INITIALS( cell -> cell.matches( INITIALS_REGEX ) );
 
     private final Predicate<String> predicate;
 

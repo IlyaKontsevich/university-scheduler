@@ -20,8 +20,7 @@ public class ParserController
     @GetMapping( "/parse" )
     public String testS3Connection() throws IOException, InvalidFormatException
     {
-        parserService.parse();
-        return "Work";
+        return parserService.parse();
     }
 
 }

@@ -41,6 +41,9 @@ dependencies {
     compile "org.apache.poi:poi:3.17"
     compile "org.apache.poi:poi-ooxml:3.17"
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
+    compile('org.springframework.boot:spring-boot-starter-web')
     api('commons-collections:commons-collections:3.2.2')
     api('org.testng:testng:6.11')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
