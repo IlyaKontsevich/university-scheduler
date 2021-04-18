@@ -3,6 +3,7 @@ package com.scheduler.timetable;
 import com.scheduler.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,7 +17,8 @@ import java.time.LocalDateTime;
 public class TimeTable extends BaseEntity
 {
     @Id
-    @NotNull
+    @GeneratedValue( strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator( name = "native", strategy = "native")
     @Column( name = "tt_id" )
     private Long id;
 
@@ -26,7 +28,7 @@ public class TimeTable extends BaseEntity
 
     @NotNull
     @Column( name = "tt_date" )
-    private LocalDate date;
+    private LocalDate date = LocalDate.now(); //todo temporary
 
     @NotNull
     @ManyToOne( fetch = FetchType.LAZY )

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static com.scheduler.parser.ParserStringUtils.*;
-import static com.scheduler.parser.ParserStringUtils.isMatchesValidRegex;
+import static org.apache.commons.lang3.StringUtils.containsAny;
 
 public enum ParserPredicates
 {
@@ -23,7 +23,11 @@ public enum ParserPredicates
     IS_ROW_START_WITH_LESSON_TIME( row -> row.matches( LESSON_TIME_REGEX ) ),
 
     IS_CELL_START_WITH_ADDITIONAL_TIME( cell -> cell.matches( ADDITIONAl_LESSON_TIME_REGEX ) ),
-    IS_CELL_START_WITH_INITIALS( cell -> cell.matches( INITIALS_REGEX ) );
+    IS_CELL_START_WITH_INITIALS( cell -> cell.matches( INITIALS_REGEX ) ),
+    IS_CELL_CONTAINS_TEACHER_TITLE( cell -> containsAny( cell, Arrays.stream( TeacherTitle.values() )
+                                                                     .map( TeacherTitle::getRussianValue )
+                                                                     .toArray( CharSequence[]::new ) ) ),
+    IS_CELL_CONTAINS_SURNAME(cell -> cell.matches( SURNAME_REGEX ));
 
     private final Predicate<String> predicate;
 

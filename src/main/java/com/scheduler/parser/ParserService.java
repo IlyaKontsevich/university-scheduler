@@ -1,8 +1,8 @@
 package com.scheduler.parser;
 
-import com.beust.jcommander.internal.Lists;
 import com.scheduler.parser.temporary.*;
 import com.scheduler.timetable.WeekDay;
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -19,8 +19,11 @@ import static com.scheduler.parser.ParserStringUtils.BLANK_ROW_REGEX;
 import static com.scheduler.parser.ParserStringUtils.splitNotEmpty;
 
 @Service
+@RequiredArgsConstructor
 public class ParserService
 {
+    private final StoreService storeService;
+
     public String parse() throws IOException, InvalidFormatException
     {
         List<String> allRows = readNotEmptyLinesFromFile( "src/main/resources/Raspisanie_Feis_3_4_Kurs2.xls" );
@@ -33,9 +36,11 @@ public class ParserService
 
         StringBuilder stringBuilder = new StringBuilder();
         dataPerGroup.forEach( dataPerGroup1 -> {
+            dataPerGroup1.getDataPerWeekDays().forEach( dataPerWeekDay -> dataPerWeekDay.getDataPerLessonList().forEach( DataPerLessonTime::parse ) );
             stringBuilder.append( "\n" );
             stringBuilder.append( dataPerGroup1 );
         } );
+        storeService.storeData( dataPerGroup );
         return stringBuilder.toString();
     }
 

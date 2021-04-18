@@ -3,11 +3,9 @@ package com.scheduler.timetable;
 import com.scheduler.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -19,21 +17,21 @@ import java.time.LocalTime;
 public class TimeTableLesson extends BaseEntity
 {
     @Id
-    @NotNull
+    @GeneratedValue( strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator( name = "native", strategy = "native")
     @Column( name = "ttl_id" )
     private Long id;
-
-    @NotNull
+    
     @Column( name = "ttl_number" )
     private Integer number;
 
     @NotNull
     @Column( name = "ttl_start" )
-    private LocalTime startTime;
+    private String startTime;
 
     @NotNull
     @Column( name = "ttl_end" )
-    private LocalTime endTime;
+    private String endTime;
 
     @NotNull
     @Column( name = "un_id" )

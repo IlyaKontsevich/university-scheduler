@@ -5,6 +5,7 @@ import com.scheduler.employee.Employee;
 import com.scheduler.lesson.TeacherLesson;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,7 +20,8 @@ import java.util.List;
 public class Teacher extends BaseEntity
 {
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator( name = "native", strategy = "native")
     @Column( name = "teach_id" )
     private Long id;
 
@@ -31,10 +33,10 @@ public class Teacher extends BaseEntity
     @Column( name = "un_id" )
     private Long universityId;
 
-    @NotNull
+/*    @NotNull
     @OneToOne( fetch = FetchType.LAZY )
     @JoinColumn( name = "em_id" )
-    private Employee employee;
+    private Employee employee;*/
 
     @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "teacher" )
     private List<TeacherLesson> lessons = new ArrayList<>();

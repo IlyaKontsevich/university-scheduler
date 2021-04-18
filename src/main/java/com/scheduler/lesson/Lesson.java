@@ -5,6 +5,7 @@ import com.scheduler.common.entity.BaseEntity;
 import com.scheduler.timetable.TimeTable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,7 +18,8 @@ import java.time.LocalDateTime;
 public class Lesson extends BaseEntity
 {
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator( name = "native", strategy = "native")
     @Column( name = "les_id" )
     private Long id;
 

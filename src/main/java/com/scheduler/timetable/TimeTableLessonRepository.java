@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TimeTableRepository extends JpaRepository<TimeTable, Long>
+public interface TimeTableLessonRepository extends JpaRepository<TimeTableLesson, Long>
 {
-    TimeTable findByName( String name );
+    TimeTableLesson findByStartTime( String startTime );
 }

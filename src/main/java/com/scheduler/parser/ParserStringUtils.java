@@ -1,5 +1,7 @@
 package com.scheduler.parser;
 
+import liquibase.pro.packaged.S;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +13,16 @@ public class ParserStringUtils
     public static final String LESSON_TIME_REGEX = "^[|][0-9]{2}[.][0-9]{2}-[0-9]{2}[.][0-9]{2}.*";
     public static final String BLANK_ROW_REGEX = "^[|]*$";
     public static final String ADDITIONAl_LESSON_TIME_REGEX = "^[0-9]{2}[:][0-9]{2}-[0-9]{2}[:][0-9]{2}.*";
-    public static final Map<Integer, String> SIZE_OF_AND_CLASSROOM_NAME_REGEXES = Map.of(
+    public static final Map<Integer, String> SIZE_OF_AND_CLASSROOM_NAME_REGEXES_WITH_LETTERS = Map.of(
         6, "^[0-9][/][0-9]{3}[а-я].*",
+        4, "^[0-9]{3}[а-я].*" );
+    public static final Map<Integer, String> SIZE_OF_AND_CLASSROOM_NAME_REGEXES = Map.of(
         5, "^[0-9][/][0-9]{3}.*",
-        4, "^[0-9]{3}[а-я].*",
         3, "^[0-9]{3}.*" );
     public static final String INITIALS_REGEX = "^[А-Я][.][А-Я][.].*";
+    public static final String SURNAME_REGEX = "^[А-Я]+[а-я ]{2}.*$";
+    public static final String REGEX_TWO_FIRST_WORD_WITH_CAPITAL_LETTERS = "^[А-Я]+[а-я]*[ ]+[А-Я0-9].*";
+    public static final String STRING_WITH_NUMBERS_REGEX = ".*[0-9].*";
 
     private ParserStringUtils()
     {

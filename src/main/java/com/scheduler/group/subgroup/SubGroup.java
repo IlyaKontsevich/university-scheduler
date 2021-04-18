@@ -5,6 +5,7 @@ import com.scheduler.group.Group;
 import com.scheduler.lesson.SubGroupLesson;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,7 +20,8 @@ import java.util.List;
 public class SubGroup extends BaseEntity
 {
     @Id
-    @NotNull
+    @GeneratedValue( strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator( name = "native", strategy = "native")
     @Column( name = "sgr_id" )
     private Long id;
 

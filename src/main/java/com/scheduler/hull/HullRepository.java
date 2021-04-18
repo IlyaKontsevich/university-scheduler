@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HullRepository extends JpaRepository<Hull, Long>
 {
+    Hull findByNumber( Long number );
 }

@@ -11,9 +11,9 @@ databaseChangeLog:
               CREATE TABLE IF NOT EXISTS time_table_lesson
               (
               ttl_id       INT AUTO_INCREMENT NOT NULL,
-              ttl_number   INT UNSIGNED       NOT NULL,
-              ttl_start    TIME UNIQUE        NOT NULL,
-              ttl_end      TIME UNIQUE        NOT NULL,
+              ttl_number   INT UNSIGNED       ,
+              ttl_start    VARCHAR(255) UNIQUE        NOT NULL,
+              ttl_end      VARCHAR(255) UNIQUE        NOT NULL,
               ttl_created  datetime DEFAULT CURRENT_TIMESTAMP,
               ttl_modified datetime DEFAULT CURRENT_TIMESTAMP,
               un_id       INT                NOT NULL,

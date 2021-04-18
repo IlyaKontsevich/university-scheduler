@@ -5,6 +5,7 @@ import com.scheduler.group.subgroup.SubGroup;
 import com.scheduler.teacher.Teacher;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,7 +18,8 @@ import java.time.LocalDateTime;
 public class SubGroupLesson extends BaseEntity
 {
     @Id
-    @NotNull
+    @GeneratedValue( strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator( name = "native", strategy = "native")
     @Column( name = "sgl_id" )
     private Long id;
 
@@ -31,7 +33,6 @@ public class SubGroupLesson extends BaseEntity
     @JoinColumn( name = "les_id" )
     private Lesson lesson;
 
-    @NotNull
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn( name = "sgr_id" )
     private SubGroup subGroup;
