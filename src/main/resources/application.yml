@@ -2,7 +2,7 @@ server:
   port: 8770
   servlet.context-path: /scheduler
 datasource:
-  host: '${dockerdbhost:localhost}:3307'
+  host: '${dockerdbhost:localhost}:3306'
   schema: 'scheduler'
   url: 'jdbc:mariadb://${datasource.host}/${datasource.schema}'
   username: 'root'
