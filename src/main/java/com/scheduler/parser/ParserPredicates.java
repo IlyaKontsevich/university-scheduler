@@ -23,11 +23,16 @@ public enum ParserPredicates
     IS_ROW_START_WITH_LESSON_TIME( row -> row.matches( LESSON_TIME_REGEX ) ),
 
     IS_CELL_START_WITH_ADDITIONAL_TIME( cell -> cell.matches( ADDITIONAl_LESSON_TIME_REGEX ) ),
-    IS_CELL_START_WITH_INITIALS( cell -> cell.matches( INITIALS_REGEX ) ),
+    IS_CELL_START_WITH_INITIALS( cell -> cell.matches( START_WITH_INITIALS_REGEX ) ),
     IS_CELL_CONTAINS_TEACHER_TITLE( cell -> containsAny( cell, Arrays.stream( TeacherTitle.values() )
                                                                      .map( TeacherTitle::getRussianValue )
                                                                      .toArray( CharSequence[]::new ) ) ),
-    IS_CELL_CONTAINS_SURNAME(cell -> cell.matches( SURNAME_REGEX ));
+    IS_CELL_START_WITH_SURNAME( cell -> cell.matches( SURNAME_REGEX ) ),
+    IS_CELL_CONTAINS_ONLY_SUBJECT_NAME( cell -> ( !IS_CELL_CONTAINS_TEACHER_TITLE.test( cell )
+                                                  && !cell.matches( STRING_WITH_NUMBERS_REGEX )
+                                                  && !cell.matches( CONTAINS_INITIALS_REGEX )
+                                                  && !cell.matches( REGEX_TWO_FIRST_WORD_WITH_CAPITAL_LETTERS ) )
+                                                || cell.matches( REGEX_FIRST_WORD_IS_ABBREVIATION ) );
 
     private final Predicate<String> predicate;
 
