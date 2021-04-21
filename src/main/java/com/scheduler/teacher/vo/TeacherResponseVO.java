@@ -1,6 +1,6 @@
 package com.scheduler.teacher.vo;
 
-import com.scheduler.lesson.vo.TeacherLessonResponseVO;
+import com.scheduler.lesson.vo.LessonResponseVO;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -12,5 +12,5 @@ public class TeacherResponseVO
     private Long id;
     private String name;
     private Long universityId;
-    private List<TeacherLessonResponseVO> lessons = new ArrayList<>();
+    private List<LessonResponseVO> lessons = new ArrayList<>();
 }

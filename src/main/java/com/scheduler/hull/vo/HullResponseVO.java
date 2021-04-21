@@ -1,12 +1,12 @@
-package com.scheduler.group.subgroup.vo;
+package com.scheduler.hull.vo;
 
 import lombok.Data;
 
 @Data
-public class SubGroupResponseVO
+public class HullResponseVO
 {
     private Long id;
     private Long number;
+    private String address;
     private Long universityId;
-    private GroupResponseVO group;
 }

@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface SubGroupLessonRepository extends JpaRepository<SubGroupLesson, Long>
 {
-    @Query( "find SubGroupLesson where subGroup.id =:subGroupId" )
-    List<SubGroupLesson> findBySubGroupId( @Param( "subGroupId" ) Long subGroupId );
+    @Query( "from SubGroupLesson where subGroup.group.name =:name and subGroup.number =:number" )
+    List<SubGroupLesson> findByGroupNameAndSubGroupNumber( @Param( "name" ) String name, @Param( "number" ) Long number);
 }
