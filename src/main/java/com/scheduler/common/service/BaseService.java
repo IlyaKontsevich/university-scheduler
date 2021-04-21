@@ -2,7 +2,7 @@ package com.scheduler.common.service;
 
 import com.scheduler.common.exception.ErrorResponse;
 import com.scheduler.common.domain.NotFoundResponseError;
-import com.scheduler.common.mapper.EntityToVOMapper;
+import com.scheduler.common.mapper.EntityToVOCrudMapper;
 import com.scheduler.common.repository.SpecificationPagingAndSortingRepository;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public abstract class BaseService<ENTITY, CREATE_VO, UPDATE_VO, RESPONSE_VO>
     @SuppressWarnings( "unchecked" )
     private final Class<ENTITY> entityClass = (Class<ENTITY>) GenericTypeResolver.resolveTypeArgument( getClass(), BaseService.class );
 
-    protected abstract EntityToVOMapper<ENTITY, CREATE_VO, UPDATE_VO, RESPONSE_VO> getEntityVOMapper();
+    protected abstract EntityToVOCrudMapper<ENTITY, CREATE_VO, UPDATE_VO, RESPONSE_VO> getEntityVOMapper();
 
     //@Override
     protected abstract SpecificationPagingAndSortingRepository<ENTITY, UUID> getEntityRepository();

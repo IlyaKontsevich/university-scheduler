@@ -1,6 +1,6 @@
 package com.scheduler.student.mapper;
 
-import com.scheduler.common.mapper.EntityToVOMapper;
+import com.scheduler.common.mapper.EntityToVOCrudMapper;
 import com.scheduler.student.entity.Student;
 import com.scheduler.student.vo.StudentResponseVO;
 import com.scheduler.student.vo.StudentUpdateRequestVO;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class StudentMapper implements EntityToVOMapper<Student, StudentCreateRequestVO, StudentUpdateRequestVO, StudentResponseVO>
+public class StudentMapper implements EntityToVOCrudMapper<Student, StudentCreateRequestVO, StudentUpdateRequestVO, StudentResponseVO>
 {
     @Override
     public StudentResponseVO toResponseVO( Student student, Object... args )

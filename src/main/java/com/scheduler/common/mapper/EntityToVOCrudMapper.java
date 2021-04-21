@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public interface EntityToVOMapper<ENTITY, CREATE_VO, UPDATE_VO, RESPONSE_VO>
+public interface EntityToVOCrudMapper<ENTITY, CREATE_VO, UPDATE_VO, RESPONSE_VO>
 {
     RESPONSE_VO toResponseVO( ENTITY entity, Object... args );
 
