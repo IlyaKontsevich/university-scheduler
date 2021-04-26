@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -51,14 +52,7 @@ public class StoreService
                     TimeTable timeTable = createAndSaveTimeTable( lessonVO, dataPerWeekDay.getWeekDay() );
                     Lesson lesson = new Lesson();
                     lesson.setUniversityId( university.getId() );
-                    if( StringUtils.isBlank( lessonVO.getName() ) )
-                    {
-                        lesson.setName( "UNKNOWN" );
-                    }
-                    else
-                    {
-                        lesson.setName( lessonVO.getName() );
-                    }
+                    lesson.setName( Optional.ofNullable( lessonVO.getName() ).orElse( "UNKNOWN" ) );
                     lesson.setClassroom( classroom );
                     lesson.setTimeTable( timeTable );
                     lesson = lessonRepository.save( lesson );
@@ -88,16 +82,8 @@ public class StoreService
         if( teacher == null )
         {
             teacher = new Teacher();
-
             teacher.setUniversityId( university.getId() );
-            if( StringUtils.isBlank( lessonVO.getTeacher() ) )
-            {
-                teacher.setName( "UNKNOWN" );
-            }
-            else
-            {
-                teacher.setName( lessonVO.getTeacher() );
-            }
+            teacher.setName( Optional.ofNullable( lessonVO.getTeacher() ).orElse( "UNKNOWN" ) );
             teacher = teacherRepository.save( teacher );
         }
         TeacherLesson teacherLesson = new TeacherLesson();
@@ -119,19 +105,12 @@ public class StoreService
             timeTable.setWeek( lessonVO.getWeekType() );
             timeTable.setWeekDay( weekDay );
             timeTable.setUniversityId( university.getId() );
-            if( StringUtils.isBlank( lessonVO.getName() ) )
-            {
-                timeTable.setName( "UNKNOWN" );
-            }
-            else
-            {
-                timeTable.setName( lessonVO.getName() );
-            }
+            timeTable.setName( Optional.ofNullable( lessonVO.getName() ).orElse( "UNKNOWN" ) );
         }
 
         String lessonTime = lessonVO.getLessonTime();
         String startTime = lessonVO.getLessonTime().substring( 0, lessonTime.indexOf( "-" ) );
-        String endTime = lessonVO.getLessonTime().substring( lessonTime.indexOf( "-" ) );
+        String endTime = lessonVO.getLessonTime().substring( lessonTime.indexOf( "-" ) + 1 );
         TimeTableLesson timeTableLesson = timeTableLessonRepository.findByStartTime( startTime );
         if( timeTableLesson == null )
         {
@@ -147,16 +126,12 @@ public class StoreService
 
     private Classroom createAndSaveClassroom( LessonTmp lessonVO )
     {
-        String classroomName = lessonVO.getClassroomName();
-        if( StringUtils.isBlank( lessonVO.getClassroomName() ) )
-        {
-            classroomName = "UNKNOWN";
-        }
+        String classroomName = Optional.ofNullable( lessonVO.getClassroomName() ).orElse( "UNKNOWN" );
         long hullNumber = 1L;
         if( StringUtils.contains( classroomName, "/" ) )
         {
             hullNumber = Long.parseLong( classroomName.substring( 0, classroomName.indexOf( "/" ) ) );
-            classroomName = classroomName.substring( classroomName.indexOf( "/" ) );
+            classroomName = classroomName.substring( classroomName.indexOf( "/" ) + 1 );
         }
         Hull hull = hullRepository.findByNumber( hullNumber );
         if( hull == null )
