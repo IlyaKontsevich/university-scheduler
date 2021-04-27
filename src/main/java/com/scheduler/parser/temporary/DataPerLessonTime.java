@@ -390,8 +390,17 @@ public class DataPerLessonTime
                 String lessonName = lessonVO.getName();
                 int indexOfNumber = getMinIndexOfNumber( lessonName );
                 String dates = lessonName.substring( indexOfNumber );
-                lessonVO.setName( lessonName.substring( 0, indexOfNumber ).replace( ",", "" ).trim() );
-                lessonVO.setDates( dates );
+                lessonName = lessonName.substring( 0, indexOfNumber ).replace( ",", "" ).trim();
+                if( lessonName.endsWith( "по" ) )
+                {
+                    lessonVO.setName( lessonName.substring( 0, lessonName.indexOf( "по" ) ) );
+                    lessonVO.setDates( "по " + dates );
+                }
+                else
+                {
+                    lessonVO.setName( lessonName );
+                    lessonVO.setDates( dates );
+                }
                 lessonVO.setWeekType( WeekType.NONE );
             }
         } );

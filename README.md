@@ -8,6 +8,8 @@ U need java 11 and docker.
 
 run file run-local.sh after that project will be available on 8770 port
 
+Swagger: http://localhost:8770/scheduler/swagger-ui.html#/
+
 ### Authors
 * Kushner
 * Kontsevich

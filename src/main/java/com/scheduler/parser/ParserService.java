@@ -82,7 +82,6 @@ public class ParserService
 
             if( dataPerGroups.get( groupNumber ) == null )
             {
-
                 DataPerGroup dataPerGroup = new DataPerGroup();
                 dataPerGroup.setGroupName( groupNames.get( groupNumber ) );
                 dataPerGroup.setDataPerWeekDays( newArrayList( dataPerWeekDay ) );
@@ -171,7 +170,16 @@ public class ParserService
                .findFirst()
                .ifPresent( groupNamesRow -> {
                    List<String> groupNamesWithSpaces = splitNotEmpty( groupNamesRow, "\\|" );
-                   groupNamesWithSpaces.forEach( name -> groupNames.add( name.substring( 0, name.indexOf( " " ) ) ) );//need cut after space, cause in group name we have "МС-3 17"
+                   groupNamesWithSpaces.forEach( name -> {
+                       if( name.contains( " " ) ) //need cut after space, cause in group name we have "МС-3 17"
+                       {
+                           groupNames.add( name.substring( 0, name.indexOf( " " ) ) );
+                       }
+                       else
+                       {
+                           groupNames.add( name );
+                       }
+                   } );
                } );
         return groupNames;
     }
