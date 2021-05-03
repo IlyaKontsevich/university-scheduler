@@ -9,8 +9,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.*;
 
 import static com.beust.jcommander.internal.Lists.newArrayList;
@@ -24,9 +25,9 @@ public class ParserService
 {
     private final StoreService storeService;
 
-    public String parse() throws IOException, InvalidFormatException
+    public String parse( InputStream inputStream ) throws IOException, InvalidFormatException, URISyntaxException
     {
-        List<String> allRows = readNotEmptyLinesFromFile( "src/main/resources/Raspisanie_Feis_3_4_Kurs2.xls" );
+        List<String> allRows = readNotEmptyLinesFromFile( inputStream );
         List<String> groupNames = getGroupNames( allRows );
         Map<WeekDay, List<String>> weekDayListMap = getDataPerWeeks( allRows );
 
@@ -81,7 +82,6 @@ public class ParserService
 
             if( dataPerGroups.get( groupNumber ) == null )
             {
-
                 DataPerGroup dataPerGroup = new DataPerGroup();
                 dataPerGroup.setGroupName( groupNames.get( groupNumber ) );
                 dataPerGroup.setDataPerWeekDays( newArrayList( dataPerWeekDay ) );
@@ -138,9 +138,9 @@ public class ParserService
         return numberWithForElements;
     }
 
-    private List<String> readNotEmptyLinesFromFile( String filePath ) throws IOException, InvalidFormatException
+    private List<String> readNotEmptyLinesFromFile( InputStream inputStream ) throws IOException, InvalidFormatException, URISyntaxException
     {
-        Workbook workbook = WorkbookFactory.create( new File( filePath ) );
+        Workbook workbook = WorkbookFactory.create( inputStream );
         Sheet sheet = workbook.getSheetAt( 0 );
         List<String> allRows = new ArrayList<>();
 
@@ -170,7 +170,16 @@ public class ParserService
                .findFirst()
                .ifPresent( groupNamesRow -> {
                    List<String> groupNamesWithSpaces = splitNotEmpty( groupNamesRow, "\\|" );
-                   groupNamesWithSpaces.forEach( name -> groupNames.add( name.substring( 0, name.indexOf( " " ) ) ) );//need cut after space, cause in group name we have "МС-3 17"
+                   groupNamesWithSpaces.forEach( name -> {
+                       if( name.contains( " " ) ) //need cut after space, cause in group name we have "МС-3 17"
+                       {
+                           groupNames.add( name.substring( 0, name.indexOf( " " ) ) );
+                       }
+                       else
+                       {
+                           groupNames.add( name );
+                       }
+                   } );
                } );
         return groupNames;
     }

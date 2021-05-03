@@ -215,8 +215,7 @@ databaseChangeLog:
               tt_dates    VARCHAR(255) COMMENT 'FOR tt_week == NONE ex:(10.02, 12.04)',
               un_id       INT                NOT NULL,
               FOREIGN KEY (un_id) REFERENCES university (un_id),
-              PRIMARY KEY (tt_id),
-              CONSTRAINT tt_uniq_constraint UNIQUE (tt_name, tt_date, ttl_id)
+              PRIMARY KEY (tt_id)
               );
 
               CREATE TABLE IF NOT EXISTS lesson

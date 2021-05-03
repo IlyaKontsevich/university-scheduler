@@ -10,6 +10,7 @@ import com.scheduler.hull.Hull;
 import com.scheduler.hull.HullRepository;
 import com.scheduler.lesson.*;
 import com.scheduler.parser.temporary.DataPerGroup;
+import com.scheduler.parser.temporary.LessonTmp;
 import com.scheduler.teacher.Teacher;
 import com.scheduler.teacher.TeacherRepository;
 import com.scheduler.timetable.*;
@@ -22,7 +23,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -45,24 +45,22 @@ public class StoreService
     public void storeData( Collection<DataPerGroup> data )
     {
         university = createAndStoreUniversity();
-        data.forEach( dataPerGroup -> {
-            dataPerGroup.getDataPerWeekDays().forEach( dataPerWeekDay -> {
-                dataPerWeekDay.getDataPerLessonList().forEach( dataPerLessonTime -> {
-                    dataPerLessonTime.getLessons().forEach( lessonVO -> {
-                        Classroom classroom = createAndSaveClassroom( lessonVO );
-                        TimeTable timeTable = createAndSaveTimeTable( lessonVO, dataPerWeekDay.getWeekDay() );
-                        Lesson lesson = new Lesson();
-                        lesson.setUniversityId( university.getId() );
-                        lesson.setName( Optional.ofNullable( lessonVO.getName() ).orElse( "UNKNOWN" ) );
-                        lesson.setClassroom( classroom );
-                        lesson.setTimeTable( timeTable );
-                        lesson = lessonRepository.save( lesson );
-                        Teacher teacher = createAndSaveTeacher( lessonVO, lesson );
-                        createAndSaveGroup( dataPerGroup.getGroupName(), lesson, teacher, lessonVO );
-                    } );
+        data.forEach( dataPerGroup -> dataPerGroup.getDataPerWeekDays().forEach( dataPerWeekDay -> {
+            dataPerWeekDay.getDataPerLessonList().forEach( dataPerLessonTime -> {
+                dataPerLessonTime.getLessons().forEach( lessonVO -> {
+                    Classroom classroom = createAndSaveClassroom( lessonVO );
+                    TimeTable timeTable = createAndSaveTimeTable( lessonVO, dataPerWeekDay.getWeekDay() );
+                    Lesson lesson = new Lesson();
+                    lesson.setUniversityId( university.getId() );
+                    lesson.setName( Optional.ofNullable( lessonVO.getName() ).orElse( "UNKNOWN" ) );
+                    lesson.setClassroom( classroom );
+                    lesson.setTimeTable( timeTable );
+                    lesson = lessonRepository.save( lesson );
+                    Teacher teacher = createAndSaveTeacher( lessonVO, lesson );
+                    createAndSaveGroup( dataPerGroup.getGroupName(), lesson, teacher, lessonVO );
                 } );
             } );
-        } );
+        } ) );
     }
 
     private University createAndStoreUniversity()
@@ -78,13 +76,12 @@ public class StoreService
         return university;
     }
 
-    private Teacher createAndSaveTeacher( LessonVO lessonVO, Lesson lesson )
+    private Teacher createAndSaveTeacher( LessonTmp lessonVO, Lesson lesson )
     {
         Teacher teacher = teacherRepository.findByName( lessonVO.getTeacher() );
         if( teacher == null )
         {
             teacher = new Teacher();
-
             teacher.setUniversityId( university.getId() );
             teacher.setName( Optional.ofNullable( lessonVO.getTeacher() ).orElse( "UNKNOWN" ) );
             teacher = teacherRepository.save( teacher );
@@ -98,7 +95,7 @@ public class StoreService
         return teacherRepository.save( teacher );
     }
 
-    private TimeTable createAndSaveTimeTable( LessonVO lessonVO, WeekDay weekDay )
+    private TimeTable createAndSaveTimeTable( LessonTmp lessonVO, WeekDay weekDay )
     {
         TimeTable timeTable = timeTableRepository.findByName( lessonVO.getName() );
         if( timeTable == null )
@@ -108,12 +105,12 @@ public class StoreService
             timeTable.setWeek( lessonVO.getWeekType() );
             timeTable.setWeekDay( weekDay );
             timeTable.setUniversityId( university.getId() );
-            timeTable.setName( Optional.ofNullable( lessonVO.getName() ).orElse( UUID.randomUUID().toString() ) );//todo temporary
+            timeTable.setName( Optional.ofNullable( lessonVO.getName() ).orElse( "UNKNOWN" ) );
         }
 
         String lessonTime = lessonVO.getLessonTime();
         String startTime = lessonVO.getLessonTime().substring( 0, lessonTime.indexOf( "-" ) );
-        String endTime = lessonVO.getLessonTime().substring( lessonTime.indexOf( "-" ) );
+        String endTime = lessonVO.getLessonTime().substring( lessonTime.indexOf( "-" ) + 1 );
         TimeTableLesson timeTableLesson = timeTableLessonRepository.findByStartTime( startTime );
         if( timeTableLesson == null )
         {
@@ -127,14 +124,14 @@ public class StoreService
         return timeTableRepository.save( timeTable );
     }
 
-    private Classroom createAndSaveClassroom( LessonVO lessonVO )
+    private Classroom createAndSaveClassroom( LessonTmp lessonVO )
     {
         String classroomName = Optional.ofNullable( lessonVO.getClassroomName() ).orElse( "UNKNOWN" );
         long hullNumber = 1L;
         if( StringUtils.contains( classroomName, "/" ) )
         {
             hullNumber = Long.parseLong( classroomName.substring( 0, classroomName.indexOf( "/" ) ) );
-            classroomName = classroomName.substring( classroomName.indexOf( "/" ) );
+            classroomName = classroomName.substring( classroomName.indexOf( "/" ) + 1 );
         }
         Hull hull = hullRepository.findByNumber( hullNumber );
         if( hull == null )
@@ -158,7 +155,7 @@ public class StoreService
         return classroom;
     }
 
-    private Group createAndSaveGroup( String groupName, Lesson lesson, Teacher teacher, LessonVO lessonVO )
+    private Group createAndSaveGroup( String groupName, Lesson lesson, Teacher teacher, LessonTmp lessonVO )
     {
         Group group = groupRepository.findByName( groupName );
         if( group == null )

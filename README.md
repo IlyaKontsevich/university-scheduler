@@ -1,13 +1,14 @@
 # DIPLOMA PROJECT (university scheduler)
 
 ## Local setup
-Run file src/main/resources/docker/run-local.sh 
-after that create scheduler schema
+docker-compose.yml run mysqlDB
 
-```
-create schema scheduler;
-grant all privileges on scheduler.* to 'root'@'%' identified by "mYsQl";
-```
+## Docker setup
+U need java 11 and docker.
+
+run file run-local.sh after that project will be available on 8770 port
+
+Swagger: http://localhost:8770/scheduler/swagger-ui.html#/
 
 ### Authors
 * Kushner
