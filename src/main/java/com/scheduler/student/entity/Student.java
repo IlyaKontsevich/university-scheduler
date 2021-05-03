@@ -1,4 +1,4 @@
-package com.scheduler.student;
+package com.scheduler.student.entity;
 
 import com.scheduler.auth.Credential;
 import com.scheduler.common.entity.BaseEntity;

@@ -1,5 +1,6 @@
 package com.scheduler.student;
 
+import com.scheduler.student.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
