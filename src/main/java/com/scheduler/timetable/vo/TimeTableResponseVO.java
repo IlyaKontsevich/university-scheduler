@@ -10,8 +10,6 @@ import java.time.LocalDate;
 public class TimeTableResponseVO
 {
     private Long id;
-    private String name;
-    private LocalDate date = LocalDate.now(); //todo temporary
     private TimeTableLessonResponseVO timeTableLesson;
     private WeekType week;
     private WeekDay weekDay;

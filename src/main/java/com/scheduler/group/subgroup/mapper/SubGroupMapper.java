@@ -22,7 +22,7 @@ public class SubGroupMapper implements EntityToResponseVOMapper<SubGroup, SubGro
     public SubGroupResponseVO toResponseVO( SubGroup subGroup, Object... args )
     {
         SubGroupResponseVO subGroupResponseVO = modelMapper.map( subGroup, SubGroupResponseVO.class );
-        subGroupResponseVO.setGroup( groupMapper.toResponseVO( subGroup.getGroup(), GroupResponseVO.class ) );
+        subGroupResponseVO.setGroup( groupMapper.toResponseVO( subGroup.getGroup() ) );
         return subGroupResponseVO;
     }
 }

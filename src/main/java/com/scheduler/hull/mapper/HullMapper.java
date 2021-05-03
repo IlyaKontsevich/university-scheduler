@@ -11,6 +11,11 @@ public class HullMapper implements EntityToResponseVOMapper<Hull, HullResponseVO
     @Override
     public HullResponseVO toResponseVO( Hull hull, Object... args )
     {
-        return null;
+        HullResponseVO hullResponseVO = new HullResponseVO();
+        hullResponseVO.setAddress(hull.getAddress());
+        hullResponseVO.setNumber(hull.getNumber());
+        hullResponseVO.setUniversityId(hull.getUniversityId());
+        hullResponseVO.setAddress(hull.getAddress());
+        return hullResponseVO;
     }
 }

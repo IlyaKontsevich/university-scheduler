@@ -18,16 +18,16 @@ public class LessonsViewController
     private final LessonsViewService lessonsViewService;
 
     @GetMapping( "/sub-group" )
-    public ResponseEntity getSubGroupLessonView(
-        @RequestParam( name = "name", required = false ) final String name,
-        @RequestParam( name = "number", required = false ) final Long number )
+    public ResponseEntity<?> getSubGroupLessonView(
+        @RequestParam( name = "name") final String name,
+        @RequestParam( name = "number") final Long number )
     {
         return ResponseEntity.ok( lessonsViewService.getSubGroupLessonsViewBySubGroupId( name, number ) );
     }
 
     @GetMapping( "/teacher" )
-    public ResponseEntity getSubGroupLessonView(
-        @RequestParam( name = "name", required = false ) final String name )
+    public ResponseEntity<?> getSubGroupLessonView(
+        @RequestParam( name = "name") final String name )
     {
         return ResponseEntity.ok( lessonsViewService.getTeacherLessonsByTeacherName( name ) );
     }
