@@ -3,11 +3,9 @@ package com.scheduler.auth;
 import com.scheduler.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -18,7 +16,8 @@ import java.time.LocalDateTime;
 public class Credential extends BaseEntity
 {
     @Id
-    @NotNull
+    @GeneratedValue( strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator( name = "native", strategy = "native")
     @Column( name = "cr_id" )
     private Long id;
 
@@ -37,6 +36,14 @@ public class Credential extends BaseEntity
     @NotNull
     @Column( name = "un_id" )
     private Long universityId;
+
+    @NotNull
+    @Column( name = "cr_is_pass_temp" )
+    private boolean isPasswordTemp;
+
+    @ManyToOne( fetch = FetchType.LAZY )
+    @JoinColumn( name = "rol_id" )
+    private Role role;
 
     @Column( name = "cr_created", updatable = false )
     private LocalDateTime created;

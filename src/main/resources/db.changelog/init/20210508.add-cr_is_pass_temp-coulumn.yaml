@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - logicalFilePath: no-path
+  - changeSet:
+      id: 20210508.add-cr_is_pass_temp-coulumn
+      author: ikantsevich@exadel
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                columnName: cr_is_pass_temp
+                tableName: credential
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: cr_is_pass_temp
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+                  defaultValueBoolean: false
+                  remarks: Is credential password is temporary
+            tableName: credential

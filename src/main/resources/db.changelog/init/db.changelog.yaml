@@ -6,3 +6,6 @@ databaseChangeLog:
   - include:
       file: 20201205.add-time_table_lesson-table.yaml
       relativeToChangelogFile: true
+  - include:
+      file: 20210508.add-cr_is_pass_temp-coulumn.yaml
+      relativeToChangelogFile: true    

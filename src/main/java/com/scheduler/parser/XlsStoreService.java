@@ -27,7 +27,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class StoreService
+public class XlsStoreService
 {
     private final GroupRepository groupRepository;
     private final SubGroupRepository subGroupRepository;

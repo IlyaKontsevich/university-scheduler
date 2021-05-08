@@ -1,2 +1,2 @@
 
-GET http://localhost:8770/scheduler/parser/parse HTTP/1.1
+GET http://localhost:8770/scheduler/parser/parse/xls HTTP/1.1

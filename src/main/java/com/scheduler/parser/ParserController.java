@@ -18,12 +18,19 @@ import java.net.URISyntaxException;
 @RequiredArgsConstructor
 public class ParserController
 {
-    private final ParserService parserService;
+    private final XlsParserService xlsParserService;
+    private final DocParsesService docParsesService;
 
-    @PostMapping( "/parse" )
-    public String testS3Connection( @RequestBody MultipartFile file ) throws IOException, InvalidFormatException, URISyntaxException
+    @PostMapping( "/parse/xls" )
+    public String loadScheduler( @RequestBody MultipartFile file ) throws IOException, InvalidFormatException, URISyntaxException
     {
-        return parserService.parse( file.getInputStream() );
+        return xlsParserService.parse( file.getInputStream() );
+    }
+
+    @PostMapping( "/parse/doc" )
+    public String loadStudents( @RequestBody MultipartFile file ) throws IOException, InvalidFormatException, URISyntaxException
+    {
+        return docParsesService.parse( file.getInputStream() );
     }
 
 }

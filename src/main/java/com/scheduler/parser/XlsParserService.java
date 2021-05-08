@@ -21,9 +21,9 @@ import static com.scheduler.parser.ParserStringUtils.splitNotEmpty;
 
 @Service
 @RequiredArgsConstructor
-public class ParserService
+public class XlsParserService
 {
-    private final StoreService storeService;
+    private final XlsStoreService storeService;
 
     public String parse( InputStream inputStream ) throws IOException, InvalidFormatException, URISyntaxException
     {

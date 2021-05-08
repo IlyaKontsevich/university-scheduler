@@ -25,6 +25,7 @@ public class ParserStringUtils
     public static final String STRING_WITH_NUMBERS_REGEX = ".*[0-9].*";
     public static final String REGEX_TWO_FIRST_WORD_WITH_CAPITAL_LETTERS = "^[А-Я]+[а-я]*[ ]+[А-Я].*";
     public static final String REGEX_FIRST_WORD_IS_ABBREVIATION = "^[А-Я]\\p{L}*[А-Я]\\p{L}.*";
+    public static final String REGEX_START_WITH_NUMBERS = "^[0-9].*";
 
     private ParserStringUtils()
     {

@@ -39,6 +39,7 @@ dependencies {
     implementation('org.mariadb.jdbc:mariadb-java-client')
     implementation('com.fasterxml.jackson.module:jackson-module-jaxb-annotations')
     implementation('org.modelmapper:modelmapper:2.3.6')
+    implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: '3.17'
     compile group: 'org.liquibase', name: 'liquibase-core', version: '4.0.0'
     compile "org.apache.poi:poi:3.17"
     compile "org.apache.poi:poi-ooxml:3.17"
