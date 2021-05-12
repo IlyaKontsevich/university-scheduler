@@ -41,7 +41,7 @@ public class UserDetailsImpl implements UserDetails
 
         return new UserDetailsImpl(
             credential.getId(),
-            credential.getName(),
+            credential.getLogin(),
             credential.getPassword(),
             authorities );
     }

@@ -27,7 +27,6 @@ public class Role extends BaseEntity
     @Column( name = "rol_name" )
     private String name;
 
-    @NotEmpty
     @ManyToMany( cascade = { CascadeType.MERGE, CascadeType.PERSIST }, fetch = FetchType.LAZY )
     @JoinTable( name = "role_permissions",
                 joinColumns = @JoinColumn( name = "rol_id" ),
