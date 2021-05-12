@@ -8,4 +8,7 @@ databaseChangeLog:
       relativeToChangelogFile: true
   - include:
       file: 20210508.add-cr_is_pass_temp-coulumn.yaml
-      relativeToChangelogFile: true    
+      relativeToChangelogFile: true
+  - include:
+      file: 20210512.add_admin_role.yaml
+      relativeToChangelogFile: true
