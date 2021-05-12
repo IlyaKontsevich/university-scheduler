@@ -52,3 +52,19 @@ databaseChangeLog:
               select 'Administrator', 'admin@gmail.com', '$2a$10$F5bTVDoOrpvYeyraPz8UaurERt2Kag9cpsYGgpfXW5wBbH1jhPcAC', r.un_id, r.rol_id, false
               from role r
               where r.rol_name = 'ADMIN';
+  - changeSet:
+      id: 20210512.unique-index
+      author: skushner@exadel.com
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                indexName: idx_credential_cr_login
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: cr_login
+            indexName: idx_credential_cr_login
+            tableName: credential
+            unique: true
