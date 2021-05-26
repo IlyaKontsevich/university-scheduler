@@ -7,7 +7,10 @@ datasource:
   url: 'jdbc:mariadb://${datasource.host}/${datasource.schema}'
   username: 'root'
   password: 'mYsQl'
-
+scheduler:
+  app:
+    jwtSecret: 'schedulerSecretKey'
+    jwtExpirationMs: 86400000
 spring:
   jpa:
     properties:

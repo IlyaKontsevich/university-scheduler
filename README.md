@@ -13,3 +13,10 @@ Swagger: http://localhost:8770/scheduler/swagger-ui.html#/
 ### Authors
 * Kushner
 * Kontsevich
+
+
+### Admin credential
+{
+"username": "admin@gmail.com",
+"password":"21010801"
+}

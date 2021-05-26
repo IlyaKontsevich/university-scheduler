@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - logicalFilePath: no-path
+  - changeSet:
+      id: 20210512.add_admin_role
+      author: skushner@exadel
+      changes:
+        - sql:
+            comment: add admin role
+            dbms: mysql
+            splitStatements: true
+            stripComments: true
+            sql: >
+              INSERT INTO role (rol_name, un_id) select 'ADMIN', u.un_id from university u where u.un_name = 'БрГТУ';
+  - changeSet:
+      id: 20210512.add_admin_permission
+      author: skushner@exadel
+      changes:
+        - sql:
+            comment: add admin permissions
+            dbms: mysql
+            splitStatements: true
+            stripComments: true
+            sql: >
+              INSERT INTO permissions (per_name, un_id) select 'admin_write', u.un_id from university u where u.un_name = 'БрГТУ';
+  - changeSet:
+      id: 20210512.add_admin_role_permission
+      author: skushner@exadel
+      changes:
+        - sql:
+            comment: add admin permissions
+            dbms: mysql
+            splitStatements: true
+            stripComments: true
+            sql: >
+              INSERT INTO role_permissions (rp_name, un_id, per_id, rol_id)
+              select 'admin_admin_write', r.un_id, p.per_id, r.rol_id
+              from role r,
+                   permissions p
+              where r.rol_name = 'ADMIN'
+                AND p.per_name = 'admin_write';
+  - changeSet:
+      id: 20210512.add_admin-cred
+      author: skushner@exadel
+      changes:
+        - sql:
+            comment: add admin creds
+            dbms: mysql
+            splitStatements: true
+            stripComments: true
+            sql: >
+              INSERT INTO credential (cr_name, cr_login, cr_password, un_id, rol_id, cr_is_pass_temp)
+              select 'Administrator', 'admin@gmail.com', '$2a$10$F5bTVDoOrpvYeyraPz8UaurERt2Kag9cpsYGgpfXW5wBbH1jhPcAC', r.un_id, r.rol_id, false
+              from role r
+              where r.rol_name = 'ADMIN';
+  - changeSet:
+      id: 20210512.unique-index
+      author: skushner@exadel.com
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                indexName: idx_credential_cr_login
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: cr_login
+            indexName: idx_credential_cr_login
+            tableName: credential
+            unique: true

@@ -14,6 +14,7 @@ import com.scheduler.student.entity.Student;
 import com.scheduler.university.University;
 import com.scheduler.university.UniversityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,6 +31,7 @@ public class DocStoreService
     private final GroupRepository groupRepository;
     private final UniversityRepository universityRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder encoder;
     private University university;
 
     public void store( List<StudentTmp> studentTmps )
@@ -42,7 +44,7 @@ public class DocStoreService
             Credential credential = new Credential();
 
             credential.setLogin( studentTmp.getEmail() );
-            credential.setPassword( studentTmp.getPassword() );
+            credential.setPassword( encoder.encode( studentTmp.getPassword() ) );
             credential.setName( studentTmp.getName() );
             credential.setUniversityId( university.getId() );
             credential.setPasswordTemp( true );
